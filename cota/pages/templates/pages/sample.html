@@ -1,0 +1,37 @@
+{% extends "core/base.html" %}
+{% load pages_extra %}
+{% get_pages as pages %}
+
+{% for page in pages %}
+{% block title %}{{page.titulo}}{% endblock title %}
+
+<!-- NAV -->
+{% block path %}{{page.titulo}}{% endblock path %}
+{% block navtext %}
+    Constelaciones: Temas de Arquitectura tiene como 
+    propósito difundir los temas más estudiados en
+    México y América Latina para contrastarlos con 
+    los de otros lugares, a través del reconocimiento y
+    análisis de las publicaciones universitarias producidas 
+    en México y América Latina.
+{% endblock navtext %}
+
+{% block content %}
+<div class="container sample-container">
+    <div>
+        {{page.contenido}}
+    </div>
+            <br><br><hr><br><br><br>
+            
+</div>
+{% endblock content%}
+
+<!-- Menu Edit -->
+{% block page %}
+<a class="{% if request.path == '/contact/' %}active{% endif %}" 
+            href="{% url 'admin:pages_page_change' page.id %}"><i class="fa fa-fw fa-pencil-square-o">
+</i></a>
+<div class="line" ></div>
+{% endblock %}
+
+{% endfor %}

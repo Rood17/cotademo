@@ -1,0 +1,316 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title  %}Home{% endblock %}
+{% block head %}
+ <!-- Autocomplete Nodos -->
+  <script>
+    $( function() {
+      $.widget( "custom.catcomplete", $.ui.autocomplete, {
+        _create: function() {
+          this._super();
+          this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+        },
+        _renderMenu: function( ul, items ) {
+          var that = this,
+            currentCategory = "";
+          $.each( items, function( index, item ) {
+            var li;
+            if ( item.category != currentCategory ) {
+              ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+              currentCategory = item.category;
+            }
+            li = that._renderItemData( ul, item );
+            if ( item.category ) {
+              li.attr( "aria-label", item.category + " : " + item.label );
+            }
+          });
+        }
+      });
+
+      $.ajax({
+        success: function (data) {
+          $( "#search" ).catcomplete({
+            delay: 0,
+            source: '{% url "get_auto_myl" %}',
+            minLength: 2,
+          });        
+        }
+      });
+      
+    });
+  </script>
+<!-- Autocomplete Mapa -->
+	<script>
+    $( function() {
+      $.widget( "custom.catcomplete", $.ui.autocomplete, {
+        _create: function() {
+          this._super();
+          this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+        },
+        _renderMenu: function( ul, items ) {
+          var that = this,
+            currentCategory = "";
+          $.each( items, function( index, item ) {
+            var li;
+            if ( item.category != currentCategory ) {
+              ul.append( "<li class='ui-autocomplete-category'>[ " + item.category + " ]</li>" );
+              currentCategory = item.category;
+            }
+            li = that._renderItemData( ul, item );
+            if ( item.category ) {
+              li.attr( "aria-label", item.category + " : " + item.label );
+            }
+          });
+        }
+      });
+
+      $.ajax({
+        success: function (data) {
+          $( "#search-mapa" ).catcomplete({
+            delay: 0,
+            source: "{% url 'get_auto_myl' %}",
+            minLength: 2,
+          });        
+        }
+      });
+      
+    });
+	</script>
+<!-- Autocomplete Lista -->
+	<script>
+    $( function() {
+      $.widget( "custom.catcomplete", $.ui.autocomplete, {
+        _create: function() {
+          this._super();
+          this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+        },
+        _renderMenu: function( ul, items ) {
+          var that = this,
+            currentCategory = "";
+          $.each( items, function( index, item ) {
+            var li;
+            if ( item.category != currentCategory ) {
+              ul.append( "<li class='ui-autocomplete-category'>[ " + item.category + " ]</li>" );
+              currentCategory = item.category;
+            }
+            li = that._renderItemData( ul, item );
+            if ( item.category ) {
+              li.attr( "aria-label", item.category + " : " + item.label );
+            }
+          });
+        }
+      });
+
+      $.ajax({
+        success: function (data) {
+          $( "#search-lista" ).catcomplete({
+            delay: 0,
+            source: "{% url 'get_auto_myl' %}",
+            minLength: 2,
+          });        
+        }
+      });
+      
+    });
+	</script>
+	
+{% endblock %}
+
+<!--Heading-->  
+{% block siteheading %}
+<div class="logo_container">
+	<div class="logo">
+  <a class="logo-cota" >
+		<img src="{% static 'core/img/Logos/cota_azul.png' %}">
+	</a>
+		<p class="cota-slogan">CONSTELACIONES: TEMAS DE ARQUITECTURA</p>
+	</div>
+  <div class="logo2">
+    <a onclick="openNav()" class="logo-cota">
+			<img src="{% static 'core/img/Logos/cota_rojo.png' %}">
+		</a>
+			<p class="cota-slogan">CONSTELACIONES: TEMAS DE ARQUITECTURA</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block subheading %}
+<div class="ui-widget">
+
+<!-- Buscadores -->
+		<div class="tabcontent col-lg-12 col-md-12" id="Nodos">
+			<div class="search-nav col-lg-12 col-md-12">
+			<div class="index-anim lin-index col-lg-4 col-md-4">
+				<img src="{% static 'core/img/otros/prueba-index-izq.png' %}" />
+			</div>
+			<div class="index-anim  col-lg-4">
+					<form method="GET" action="{% url 'rNodos' %}" >
+
+							{% csrf_token %}
+							{{ form.as_p }}  
+						  <input 	type='text' name="qss" id="search" placeholder="Buscar..." 
+									  data-content="Press enter to search" autofocus='autofocus' onclick="">
+						</form>
+
+					
+					
+			</div>
+			<div class="index-anim lin-index col-lg-4 col-md-4">
+				<img src="{% static 'core/img/otros/prueba-index-der.png' %}" />
+			</div>	
+			</div>
+		</div>
+
+		<div class="tabcontent col-lg-12 col-md-12" id="Mapa">
+			<div class="search-nav col-lg-12 col-md-12">
+				<div class="index-anim lin-index col-lg-4 col-md-4">
+					<img src="{% static 'core/img/otros/index-izq.png' %}" />
+				</div>
+				<div class="index-anim  col-lg-4">
+					<form method="GET" 
+						action="{% url 'rMapa' %}">
+							{% csrf_token %}
+							{{ form.as_p }}  
+					<input 	type='text' name="q" id="search-mapa" 
+						placeholder="Mapa" 
+						data-content="Press enter to search" autofocus='autofocus'>
+					</form>	
+				</div>
+				<div class="index-anim lin-index col-lg-4 col-md-4">
+					<img src="{% static 'core/img/otros/index-der.png' %}" />
+				</div>	
+			</div>
+		</div>
+		
+		<div class="tabcontent col-lg-12 col-md-12" id="Lista">
+			<div class="search-nav col-lg-12 col-md-12">
+				<div class="index-anim lin-index col-lg-4 col-md-4">
+					<img src="{% static 'core/img/otros/index-izq.png' %}" />
+				</div>
+				<div class="index-anim  col-lg-4">
+				<form method="GET" 
+					action="{% url 'rLista' %}">
+                		{% csrf_token %}
+                		{{ form.as_p }}  
+				<input 	type='text' name="q" id="search-lista" 
+					placeholder="Buscar en lista" 
+					data-content="Press enter to search" autofocus='autofocus'>
+				</form>	
+			</div>
+			<div class="index-anim lin-index col-lg-4 col-md-4">
+					<img src="{% static 'core/img/otros/index-der.png' %}" />
+			</div>
+			</div>
+		</div>
+	
+	<!-- Links Icons -->
+	<div>
+		<ul class="tab">
+			<li class="tooltip-nodos ">
+				<!-- Nodos Icon Select -->
+				<div class="imgbox-1" id="imgbox1">
+					<a onclick="removeElement()">
+						<img class="tablinks" 
+							 id="defaultOpen" 
+							 onclick="openSearch(event, 'Nodos')"					
+							 src="{% static 'core/img/Iconos/constelacion7.png' %}">	
+					</a>
+				</div>
+				<div class="imgbox-a" id="imgbox2">
+					<a onclick="removeElement2()">
+						<img id="" class="" 
+							 onclick="openSearch(event, 'Nodos')"					
+							 src="{% static 'core/img/Iconos/constelacion-azul.png' %}"></a>
+				</div>
+				<!-- Nodos Index Hover -->	
+				<!-- <div class="overlay-icon-nodos">
+					<a class="icon-hover-nodos">
+						<img id="" class="" 
+	 						 onclick="openSearch(event, 'Nodos')"					
+							 src="{% static 'core/img/Iconos/constelacion-azul.png' %}"></a>
+				</div> -->
+				 <!--Tooltip Nodos  -->
+				<span class="tooltiptext">Búsqueda en Constelaciones</span>		
+			</li>
+			
+				<div class="index-bar col-lg-12" id="">	
+					<p>I</p>
+				</div>
+			
+			<!-- Mapa Icon Select -->
+			<li class="tooltip-mapa">
+				<div class="imgbox-2" id="imgbox3">
+					<a onclick="changeVisibility2()">
+						<img class="tablinks"
+						  	 onclick="openSearch(event, 'Mapa')"
+							 src="{% static 'core/img/Iconos/mapa7.png' %}">
+					</a>
+				</div>
+				<div class="imgbox-b" id="imgbox4">
+					<a onclick="changeVisibility()">
+						<img class="tablinks"
+							 onclick="openSearch(event, 'Mapa')"
+							 src="{% static 'core/img/Iconos/mapa-azul.png' %}">
+					</a>
+				</div> 
+				<!-- Mapa Hover -->
+				<!-- <div class="overlay-icon-mapa">
+					<a class="icon-hover-mapa">
+						<img class="tablinks"
+							 onclick="openSearch(event, 'Mapa')"
+							 src="{% static 'core/img/Iconos/mapa-azul.png' %}">
+					</a>
+				</div> -->
+				<!-- Lista selector -->
+				{% comment %} <div class="imgbox-b" id="imgbox5">
+					<a onclick="">
+						<img class="tablinks"  
+							 onclick="openSearch(event, 'Lista')"					
+							 src="{% static 'core/img/Iconos/search.png' %}">	
+					</a>
+				</div> {% endcomment %}
+				
+				<!-- Mapa Tooltip -->
+				<span class="tooltiptext">Búsqueda en Mapa </span>
+			</li>
+		</ul>
+	</div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<!-- Tab buscadores -->
+<script>
+	function openSearch(evt, searchName) {
+		var i, tabcontent, tablinks;
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		}
+		tablinks = document.getElementsByClassName("tablinks");
+		for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className.replace(" active", "");
+		}
+		document.getElementById(searchName).style.display = "block";
+		evt.currentTarget.className += " active";
+	}
+		
+	// Get the element with id="defaultOpen" and click on it
+	document.getElementById("defaultOpen").click();
+</script>
+<!-- Selección de íconos -->
+<script>
+	function removeElement() {
+		document.getElementById("imgbox4").style.visibility = "hidden";
+		document.getElementById("imgbox2").style.visibility = "visible";	
+	}	
+	function changeVisibility() {
+		document.getElementById("imgbox2").style.visibility = "hidden";
+	}
+	function changeVisibility2() {
+		document.getElementById("imgbox2").style.visibility = "hidden";
+		document.getElementById("imgbox4").style.visibility = "visible";
+	}		
+</script>
+		
+{% endblock scripts %}

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  {% load static %}
+  <meta content="text/html; charset=iso-8859-1" http-equiv=Content-Type> 
+  <meta http-equiv="Content-Type" content="text/html"; charset="utf-8" />
+  <meta http-equiv="Content-Type" content="application/json"; charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>COTA | {% block title %}{% endblock %}</title>
+
+  <!-- Estilos y fuentes del template  -->
+  <link href="{% static 'core/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <link href="{% static 'core/css/clean-blog.min.css' %}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Chivo" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet"> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Karla" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="shortcut icon" href="{% static 'core/img/Iconos/constelacion-azul.ico' %}" type="image/ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- CSS Bootstrap modals -->
+  <link href="{% static 'nodos/css/bootstrap.css' %}" rel="stylesheet">
+
+  <!-- APPS-HEAD-NODOS -->
+  {% if 'constelaciones' in request.path or 'resultados_constelaciones' in request.path %}
+  <script src="{% static 'nodos/js/jquery3.3.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'nodos/data/books.json' %}"></script>
+  <script type="text/javascript" src="{% static 'nodos/data/categorias.json' %}"></script>
+  <script type="text/javascript" src="{% static 'nodos/js/vis.js' %}"></script>
+    {% if "sin_resultados" not in request.path %}
+      <script type="text/javascript" src="{% static 'nodos/data/books.js' %}"></script>
+    {% endif %}
+  <link href="{% static 'nodos/js/vis-network.min.css' %}" rel="stylesheet" type="text/css" />
+  {%  endif %}
+
+  <!-- APPS-HEAD-MAPA -->
+  <link rel="stylesheet" href="{% static 'nodos/css/estilos-lalo.css' %}">
+  <script src="{% static 'nodos/data/ciudades.json' %}"></script>
+  <script src="{% static 'nodos/data/books.json' %}"></script>
+  <script src="{% static 'nodos/js/jquery.min.js' %}" charset="utf-8"></script>
+  <script src="{% static 'nodos/js/jquery.mousewheel.min.js' %}" charset="utf-8"></script>
+  <script src="{% static 'nodos/js/raphael.min.js' %}" charset="utf-8"></script>
+  <script src="{% static 'nodos/js/jquery.mapael.js' %}" charset="utf-8"></script>
+  <script src="{% static 'nodos/js/maps/france_departments.js' %}" charset="utf-8"></script>
+  <script src="{% static 'nodos/js/maps/world_countries.js' %}" charset="utf-8"></script>
+  <script src="{% static 'nodos/js/maps/usa_states.js' %}" charset="utf-8"></script>
+  <script src="{% static 'nodos/js/maps/mexico.js' %}" charset="utf-8"></script>
+  <script src="{% static 'nodos/js/ciudades.js' %}" charset="utf-8"></script>
+  <script src="{% static 'nodos/js/main.js' %}" charset="utf-8"></script>
+  <script src="{% static 'nodos/js/jcanvas.min.js' %}"></script>
+  <script src="{% static 'nodos/js/animate.js' %}"></script>
+  <script src="{% static 'nodos/data/ciudades1.js' %}"></script>
+
+  <!-- Autocomplete -->
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <!-- Head Block -->
+  {% block head %}{% endblock head %}
+
+  <!-- Autocomplete Nodos -->
+  {% if "/nodos/resultados_constelaciones/" in request.path or "/nodos/constelaciones/" in request.path and "/category/" not in request.path %}
+  <script>  
+    $( function() {
+    $.widget( "custom.catcomplete", $.ui.autocomplete, {
+      _create: function() {
+        this._super();
+        this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+      },
+      _renderMenu: function( ul, items ) {
+        var that = this,
+          currentCategory = "";
+        $.each( items, function( index, item ) {
+          var li;
+          if ( item.category != currentCategory ) {
+            ul.append( "<li class='ui-autocomplete-category'>[ " + item.category + " ]</li>" );
+            currentCategory = item.category;
+          }
+          li = that._renderItemData( ul, item );
+          if ( item.category ) {
+            li.attr( "aria-label", item.category + " : " + item.label );
+          }
+        });
+      }
+    });
+
+    $.ajax({
+      success: function (data) {
+        $( "#search" ).catcomplete({
+          delay: 0,
+          source: '{% url "get_auto_myl" %}',
+          minLength: 2,
+        });        
+      }
+    });
+    
+    });
+  </script>
+  {% endif %}
+
+  <!-- Autocomplete Mapa, Lista y Category -->
+  {% if "/mapa/" in request.path or "/lista/" in request.path or "/resultados_mapa/" in request.path or "/resultados_lista/" in request.path or "/category/" in request.path or "/sin_resultados/" in request.path or "/categoria_estudio/" in request.path or "/info_libro/" in request.path or 'user_info' in request.path or 'ruser_info' in request.path %}
+    <script>
+  $( function() {
+    $.widget( "custom.catcomplete", $.ui.autocomplete, {
+      _create: function() {
+        this._super();
+        this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+      },
+      _renderMenu: function( ul, items ) {
+        var that = this,
+          currentCategory = "";
+        $.each( items, function( index, item ) {
+          var li;
+          if ( item.category != currentCategory ) {
+            ul.append( "<li class='ui-autocomplete-category'>[ " + item.category + " ]</li>" );
+            currentCategory = item.category;
+          }
+          li = that._renderItemData( ul, item );
+          if ( item.category ) {
+            li.attr( "aria-label", item.category + " : " + item.label );
+          }
+        });
+      }
+    });
+
+    $.ajax({
+      success: function (data) {
+        $( "#tag" ).catcomplete({
+          delay: 0,
+          source: "{% url 'get_auto_myl' %}",
+          minLength: 2,
+        });        
+      }
+    });
+    
+  });
+    </script>
+  {% endif %}
+
+
+  <!-- Style Block -->
+  {% block style %}{% endblock %}
+
+</head>
+<!-- Id=main - Sidenav -->
+<body id="main" onload="{% if 'constelaciones' in request.path or 'resultado_constelaciones' in request.path %}draw();{% endif %}{% block body %}{% endblock body %}">
+<!-- Header -->
+<header class="masthead">
+  <!-- Nav  -->
+  {% if request.path != "/" %}
+  <div class="">
+  <nav class="topnav" id="myTopnav">
+    <div class="master-menu">
+      <!-- Nav y Buscador en las páginas de apllicaciones -->
+      {% if "about" not in request.path and "contact" not in request.path and "page" not in request.path %}
+      <div class="menu-pages">
+      <a class="extra-side-span nav-icon"
+         onclick="openNav()"><i style="font-weight:lighter!important; padding-top:5px" class="fa fa-bars material-icons"></i>
+      </a>
+      <a href="{% url 'Nodos' %}" class="nav-icon {% if '/nodos/resultados_constelaciones/' == request.path or '/nodos/constelaciones/' == request.path %}no-active-img{% endif %}" >
+        <img class="fa fa-fw" src="{% static 'core/img/Iconos/constelacion.png' %}" >
+      </a>
+      <i class="nav-icon display-none {% if '/nodos/resultados_constelaciones/' == request.path or '/nodos/constelaciones/' == request.path %}active-img{% endif %}">
+        <img src="{% static 'core/img/Iconos/constelacion-azul.png' %}"
+        class="fa fa-fw"/>
+      </i>
+      <a href="{% url 'rMapa' %}" class="nav-icon {% if '/nodos/mapa/' == request.path or '/nodos/resultados_mapa/' == request.path %}no-active-img{% endif %}" >
+        <img class="fa fa-fw"  src="{% static 'core/img/Iconos/mapa.png' %}">
+      </a>
+      <i class="nav-icon display-none {% if '/nodos/mapa/' == request.path or '/nodos/resultados_mapa/' == request.path %}active-img{% endif %}">
+        <img src="{% static 'core/img/Iconos/mapa-azul.png' %}"
+        class="fa fa-fw"/>
+      </i>
+
+      {% if '/nodos/lista/' in request.path or 'categoria_estudio' in request.path or 'category' in request.path or 'info_libro' in request.path %}
+        <a href="{% url 'Lista' %}" class="nav-icon {% if 'info_libro' in request.path or 'categoria_estudio' in request.path or 'category' in request.path or '/nodos/lista/' == request.path or '/nodos/resultados_lista/' == request.path %}no-active-img{% endif %}" >
+          <img class="fa fa-fw"  src="{% static 'core/img/Iconos/search.png' %}">
+        </a>
+        <i class="nav-icon display-none {% if 'info_libro' in request.path or 'categoria_estudio' in request.path or 'category' in request.path or '/nodos/lista/' == request.path or '/nodos/resultados_lista/' == request.path %}active-img{% endif %}">
+          <img src="{% static 'core/img/Iconos/search-azul.png' %}"
+          class="fa fa-fw"/>
+        </i>
+      {% endif %}
+      
+      <!-- User - Info -->
+      {% if 'user_info' in request.path %}
+      <a class="extra-side-span nav-icon"><i style="color:rgb(107, 134, 155)" class="fa fa-fw fa-id-badge">
+        </i></a>
+      {% endif %}
+      <div class="search-container">
+
+    <!-- En mapa y lista -->
+    {% if 'mapa/' in request.path  or 'lista' in request.path or 'category' in request.path or 'categoria_estudio' in request.path or 'info_libro' in request.path %}    
+    <form method="GET" 
+            action="{% block action_resul %}{% endblock %}">
+            <img class="fa fa-fw search-icon" src="{% static 'core/img/Iconos/search.png' %}" >
+							{% csrf_token %}
+							{{ form.as_p }}  
+					<input 	type='text' name="q" id="tag" 
+						placeholder=" Buscar..." 
+						data-content="Press enter to search" autofocus='autofocus'>
+      </form>
+      {% endif %}
+
+      <!-- Solo aparece en nodos-d y nodos-r -->
+      {% if "/nodos/constelaciones/" == request.path or "/nodos/resultados_constelaciones/" == request.path %}
+      <form method="GET" action="{% url 'rNodos' %}" >
+        <img class="fa fa-fw search-icon" src="{% static 'core/img/Iconos/search.png' %}" >
+							{% csrf_token %}
+							{{ form.as_p }}  
+						  <input 	type='text' name="qss" id="search" placeholder="Buscar..." 
+									  data-content="Press enter to search" autofocus='autofocus' onclick="">
+						</form>
+      <!-- <form method="" 
+            action="javascript:buscar(this.libro)">
+        <img class="fa fa-fw search-icon" src="{% static 'core/img/Iconos/search.png' %}" >
+        <input 	type='text' name="qss" id="libro" 
+                placeholder="Buscar..." 
+                data-content="Press enter to search" autofocus='autofocus'>
+      </form> -->
+      {% endif %}
+
+      {% comment %} <!-- Solo aparece en category -->
+      {% if "/category/" in request.path or "/info_libro/" in request.path or "categoria_estudio" in request.path %}
+      <form method="" 
+            action="{% block action_resul_n %}{% endblock %}">
+        <img class="fa fa-fw search-icon" src="{% static 'core/img/Iconos/search.png' %}" >
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input 	type='text' name="q" id="tag" 
+                placeholder="Buscar..." 
+                data-content="Press enter to search" autofocus='autofocus'
+                autocomplete="off" class="ui-autocomplete-input">
+      </form>
+      {% endif %} {% endcomment %}
+
+    </div>
+    </div>
+    {% endif %}
+
+    <!-- Logo Nav en "pages" -->
+    {% if "nodos" not in request.path and "mapa" not in request.path and "lista" not in request.path %}
+    <div class="nav-pages">
+      <h4 class="nav-path" >[ {% block path %}{% endblock path %} ]</h4>
+      <div class="logo_container">
+          <div class="logo">
+          <a class="logo-cota" >
+            <img src="{% static 'core/img/Logos/cota_azul.png' %}">
+          </a>
+            <p class="cota-slogan">CONSTELACIONES: TEMAS DE ARQUITECTURA</p>
+          </div>
+          <div class="logo2">
+            <a onclick="openNav()" class="logo-cota">
+              <img src="{% static 'core/img/Logos/cota_rojo.png' %}">
+            </a>
+              <p class="cota-slogan">CONSTELACIONES: TEMAS DE ARQUITECTURA</p>
+          </div>
+        </div>
+      <!--  -->
+      <div class="nav-pages-lines">
+        <div class="nav-pages-botton">
+          <img src="{% static 'core/img/otros/about-izq.png' %}" />
+        </div>
+        <div>
+          <p>{% block navtext %}{% endblock navtext %}</p>
+        </div>
+        <div class="nav-pages-botton">
+          <img src="{% static 'core/img/otros/about-der.png' %}" />
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% endif %}
+    <!-- Side nav menu content -->
+    <div width="">
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" 
+            onclick="closeNav()">&times;</a>
+    <div class="line"></div>
+      <a title="[ Home ]" class="{% if request.path == '/' %}activee{% endif %} w3-tooltip" href="{% url 'index' %}">
+        <span style="" class="aside-tooltip w3-text w3-tag"></span>
+        <i class="fa fa-fw fa-home "></i>
+      </a>
+      <a title="[ Acerca ]" class="{% if request.path == '/about/' %}active{% endif %} w3-tooltip" 
+            href="{% url 'about' %}">
+            <span style="" class="acerca-tooltip w3-text w3-tag"></span>
+            <i class="fa fa-fw fa-user">
+            </i></a>
+      <a title="[ Ayuda ]" class="{% if request.path == '/page/2/' %}active{% endif %} w3-tooltip" 
+            href="{% url 'pages' 2 %}">
+            <span style="" class="ayuda-tooltip w3-text w3-tag"></span>
+            <i class="fa fa-fw fa-question-circle">
+            </i></a>
+      <a title="[ Contacto ]" class="{% if request.path == '/contact/' %}active{% endif %} w3-tooltip" 
+            href="{% url 'contact' %}">
+            <span style="" class="contacto-tooltip w3-text w3-tag"></span>
+            <i class="fa fa-fw fa-envelope">
+            </i></a>
+      <div class="line" ></div>
+      <a title="[ Constelaciones ]" class="w3-tooltip {% if '/nodos/resultados_constelaciones/' == request.path or '/nodos/constelaciones/' == request.path %}active{% endif %}" 
+      href="{% url 'Nodos' %}">
+      <span style="" class="nodos-tooltip w3-text w3-tag"></span>
+      <img class="fa fa-fw" src="{% static 'core/img/Iconos/constelacion.png' %}"/>
+      </a>
+      <a title="[ Mapa ]" class="w3-tooltip {% if '/nodos/mapa/' == request.path or '/nodos/resultados_mapa/' == request.path %}active{% endif %}" 
+      href="{% url 'rMapa' %}">
+      <span style="" class="mapa-tooltip w3-text w3-tag"></span>
+      <img class="fa fa-fw" src="{% static 'core/img/Iconos/mapa.png' %}"/>
+      </a>
+      <a title="[ Cat. de estudio ]" class="w3-tooltip {% if 'category' in request.path or 'categoria_estudio' in request.path or 'info_libro' in request.path or '/nodos/lista/' == request.path or '/nodos/resultados_lista/' == request.path %}active{% endif %}" 
+      href="{% url 'Lista' %}">
+      <span style="" class="lista-tooltip w3-text w3-tag"></span>
+      <img class="fa fa-fw" src="{% static 'core/img/Iconos/search.png' %}"/>
+      </a>
+      <div class="line" ></div>
+      {% if user.is_authenticated %}
+        {% if 'page' in request.path %}
+          {% block page %}{% endblock %}
+        {% else %}
+        <a title="[ Info ]" class="w3-tooltip {% if 'user_info' in request.path %}active{% endif %}" 
+        href="{% url 'user_info' %}">
+        <span style="" class="info-tooltip w3-text w3-tag"></span>
+        <i class="fa fa-fw fa-id-badge">
+        </i></a>
+        <div class="line" ></div>
+        {% endif %}
+      {% endif %}
+    </div>
+    </div>
+  </nav>
+  </div>
+</header>
+<!--Contenido del sitio-->
+<content>
+    {% if request.path in '/' %}
+      <div class="row height-responsive">
+        <div class="col-lg-12 col-md-12 mx-auto">
+          <div class="site-heading">
+          {% block siteheading %}{% endblock %}
+            <span class="subheading">
+            {% block subheading %}{% endblock %}
+            </span>
+          </div>
+        </div>
+    </div>
+  {% endif %}
+  {% block content %}{% endblock %}
+</content>
+<!-- Footer -->
+<footer>
+    <div class="container-footer">
+      <div class="row">
+        <div class="col-lg-3 col-md-3 mx-auto logos">
+          <ul class="list-inline footer-logos">
+            <li class="list-inline-item">
+            	<img src="{% static 'core/img/Logos/footer_unam_300.png' %}">
+            </li>
+            <li class="list-inline-item">
+              <img src="{% static 'core/img/Logos/footer_arqui_300.png' %}">
+            </li>
+            <li class="list-inline-item logo-lea">
+            	<img src="{% static 'core/img/Logos/footer_lea_300.png' %}">
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-4 col-md-4 mx-auto center-text">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <p>Constelaciones: Temas de Arquitectura tiene como propósito difundir 
+                los temas más estudiados en México y 
+                América Latina para contrastarlos con 
+                los de otros lugares, a través del 
+                reconocimiento y análisis de las 
+                publicaciones universitarias producidas 
+                en México y América Latina.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-2 mx-auto pages-links">
+          <ul class="list-inline">
+            <li class="">
+             	<h5>Más Información</h5>
+            </li>
+            <li class="">
+              <a href="{% url 'about' %}">Acerca de</a>
+            </li>
+            <li class="">
+            	<a href="{% url 'contact' %}">Contácta con nosotros</a>
+            </li>
+			    </ul>
+		      <ul class="list-inline">
+              <li class="">
+                  <h5>Ayuda</h5>
+               </li>
+              {% load pages_extra %}
+              {% get_pages as pages %}
+              {% for page in pages %}
+            <li class="">
+              <a href="{% url 'pages' page.id %}">{{page.titulo}}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-3 newsletter">
+          <ul class="list-inline">
+            <li class="">
+              <h5>Suscríbete a nuestro Newsletter</h5>
+            </li>
+            <li class="nws-display list-inline-item">
+              <p>Correo electrónico</p><br>
+            </li>
+            <li class="list-inline-item">
+              <div class="footer-input">
+            	<input type="text" placeholder="Email address" name="mail" required>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="bluesCode col-lg-18 col-md-18 mx-auto copyright">
+          <p style="color:rgb(241, 238, 238)" class="">Copyright &copy; 2018 · BluesCode </p>
+        </div>
+      </div>
+    </div>
+</footer>
+
+<!-- Bootstrap y Javascripts -->
+{% comment %} <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/clean-blog.min.js' %}"></script> {% endcomment %}
+
+<!-- Script SIDE MENU -->
+<script>
+  var menu = document.getElementById("mySidenav");
+
+  function openNav() {
+      document.getElementById("mySidenav").style.width = "70px";
+      document.getElementById("main").style.marginLeft = "10px";
+      document.body.style.backgroundColor = "rgba(251, 251, 251, 1)";
+    }
+
+  window.onclick = function(event) {
+    if (event.target == menu) {
+      document.getElementById("main").style.marginLeft= "0";
+      document.body.style.backgroundColor = "rgb(251, 251, 251)";
+      document.getElementById('mySidenav').style.width = "0";
+      }
+    }
+  function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+      document.getElementById("main").style.marginLeft= "0";
+      document.body.style.backgroundColor = "rgb(251, 251, 251)";
+  }
+</script>
+
+<!-- Script PopUp "Ayuda"-->
+<script>
+		function popupAyuda() {
+    		var popup = document.getElementById("popup_ayuda");
+    		popup.classList.toggle("show");
+		}
+</script>
+
+<!-- Scripts block -->
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

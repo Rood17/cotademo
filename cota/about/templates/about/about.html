@@ -1,0 +1,52 @@
+{% extends "core/base.html" %}
+{% block title %}Acerca{% endblock title %}
+{% load static %}
+
+<!-- NAV -->
+{% block path %}ACERCA DE{% endblock path %}
+{% block navtext %}
+    Constelaciones: Temas de Arquitectura tiene como 
+    propósito difundir los temas más estudiados en
+    México y América Latina para contrastarlos con 
+    los de otros lugares, a través del reconocimiento y
+    análisis de las publicaciones universitarias producidas 
+    en México y América Latina.
+{% endblock navtext %}
+
+<!-- Content -->
+{% block content %}
+<div class="container">
+    <div class="about">
+    <div class="row about-contact">   
+        <div id="contacto-tag" class="col-lg-4 order-lg-1 order-1 nav-pages-about lala">
+            <a href="{% url 'contact' %}">[ CONTACTO ]</a>
+        </div>
+        <div class="about-line col-lg-2 order-lg-2 order-2">
+            <img src="{% static 'core/img/otros/linea.png' %}" />          
+        </div>
+        <div class="col-lg-4 order-lg-3 order-3">
+            <p>Facultad de arquitectura de la 
+                Universidad Nacional Autónoma de México.
+                Av. Universidad 3000, Ciudad Universitaria, 
+                04510 Coyoacán, CDMX. 2018</p>  
+        </div>
+    </div>  
+    <div class="about-cards">
+        <div class="col-lg-12 equipo-head">
+            <h4>[ EL EQUIPO ]</h4>
+        </div>
+            {% for persona in equipo %}
+            <div class="team-card col-lg-3 mx-auto">
+                    <img class="card-img img-fluid mb-3 mb-lg-0 rounded" src="{{persona.imagen.url}}" alt="John">
+                    <div class="card-text left-0 text-center bg-faded p-5 rounded">
+                            <h2 class="mb-4">
+                            <span class="">{{persona.nombre}}</span>
+                            </h2>
+                            <p class="mb-3">{{persona.descripcion}}</p>
+                        </div>
+            </div>
+        {% endfor %}
+    </div>
+    </div>  
+</div>
+{% endblock content%}

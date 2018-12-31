@@ -1,0 +1,317 @@
+canvas{
+    width:100%;
+    height: 200px;
+}
+
+.cont{
+    max-width: 800px;
+    margin: auto;
+}
+
+
+/* Specific mapael css class are below
+ * 'mapael' class is added by plugin
+*/
+
+.mapael .map {
+    background-color: #FBFBFB;
+    margin-bottom: 10px;
+    position: relative;
+        }
+
+        /* For all zoom buttons */
+        .mapael .zoomButton {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            color: #3c5d6f;
+            width: 15px;
+            height: 15px;
+            line-height: 15px;
+            text-align: center;
+            cursor: pointer;
+            position: absolute;
+            top: 0;
+            font-weight: bold;
+            left: 10px;
+            border-radius: 50%;
+
+            -webkit-user-select: none;
+            -khtml-user-select : none;
+            -moz-user-select: none;
+            -o-user-select : none;
+            user-select: none;
+        }
+
+        /* Reset Zoom button first */
+        .mapael .zoomReset {
+            top: 10px;
+        }
+
+        /* Then Zoom In button */
+        .mapael .zoomIn {
+            top: 30px;
+        }
+
+        /* Then Zoom Out button */
+        .mapael .zoomOut {
+            top: 50px;
+        }
+
+        .mapael .mapTooltip {
+            position: absolute;
+            background-color: rgb(67, 86, 100);
+            background-color: #474c4b;
+            moz-opacity: 0.70;
+            opacity: 0.70;
+            filter: alpha(opacity=70);
+            border-radius: 10px;
+            padding: 10px;
+            z-index: 1000;
+            max-width: 200px;
+            display: none;
+            color: #fff;
+        }
+
+
+
+
+        /*TIMELINE*/
+
+
+
+.flex-parent {
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -webkit-flex-direction: column;
+       -moz-box-orient: vertical;
+       -moz-box-direction: normal;
+            flex-direction: column;
+    -webkit-justify-content: center;
+            justify-content: center;
+    -webkit-align-items: center;
+       -moz-box-align: center;
+    width: 100%;
+    height: 200px;
+}
+
+.input-flex-container {
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -webkit-justify-content: space-around;
+            justify-content: space-around;
+    -webkit-align-items: center;
+       -moz-box-align: center;
+            align-items: center;
+    width: 90vw;
+    height: 100px;
+    max-width: 100%;
+    position: relative;
+    z-index: 0;
+}
+
+.input {
+    width:  2px;
+    height: 12px;
+    background-color: #3c5d6f;
+    position: relative;
+}
+
+.input:hover {
+    cursor: pointer;
+
+}
+.input a {
+    background-color: aqua;
+}
+/* Líneas */
+.input::before, .input::after {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+       -moz-transform: translateY(-50%);
+         -o-transform: translateY(-50%);
+            transform: translateY(-50%);
+    background-color: #3c5d6f;
+    width: 135px;
+    height: 2px;
+}
+
+.input::before {
+    left: -webkit-calc(-4vw + -4px);
+    left: -moz-calc(-4vw + -4px);
+    left: calc(-4vw + -4px);
+}
+
+.input::after {
+    right: -webkit-calc(-4vw + 12.5px);
+    right: -moz-calc(-4vw + 12.5px);
+    right: calc(-4vw + 12.5px);
+}
+
+.input.active {
+    background-color: rgb(204, 108, 108);
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+}
+
+.input.active::before {
+    background-color: #3c5d6f;
+}
+
+.input.active::after {
+    background-color: #3c5d6f;
+}
+
+.input.active span {
+    font-weight: 500;
+}
+
+.input.active span::before {
+    font-size: 18px;
+    text-indent: -21px;
+
+}
+
+.input.active span::after {
+    font-size: 10px;
+}
+
+.input.active ~ .input, .input.active ~ .input::before, .input.active ~ .input::after {
+    background-color: #AEB6BF;
+}
+
+.input span {
+    width: 1px;
+    height: 10px;
+    position: absolute;
+    top: 60%;
+    left: 5px;
+    -webkit-transform: translate(-50%, -50%);
+       -moz-transform: translate(-50%, -50%);
+         -o-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    visibility: hidden;
+    text-indent: 1px;
+    color: #3c5d6f;
+}
+
+.input span::before, .input span::after {
+    visibility: visible;
+    position: absolute;
+    left: 150%;
+}
+
+.input span::after {
+    content: attr(data-year);
+    top: 25px;
+    -webkit-transform: translateX(-50%);
+       -moz-transform: translateX(-50%);
+         -o-transform: translateX(-50%);
+            transform: translateX(-50%);
+}
+/* Todos lo demás */
+.input span::before {
+    content: attr(data-info);
+    top: -30px;
+    width: 100px;
+    -webkit-transform: translateX(-5px) rotateZ(-0deg);
+       -moz-transform: translateX(-5px) rotateZ(-0deg);
+         -o-transform: translateX(-5px) rotateZ(-0deg);
+            transform: translateX(-5px) rotateZ(-0deg);
+    font-size: 12px;
+    text-indent: -18px;
+}
+
+@media (min-width: 1250px) {
+    .input::before {
+        left: -37.5px;
+    }
+    .input::after {
+        right: -37.5px;
+    }
+}
+
+@media (max-width: 850px) {
+    .input {
+        height: 17px;
+    }
+    .input::before, .input::after {
+        height: 3px;
+    }
+    .input::before {
+        left: -webkit-calc(-4vw + 8.5px);
+        left: -moz-calc(-4vw + 8.5px);
+        left: calc(-4vw + 8.5px);
+    }
+    .input::after {
+        right: -webkit-calc(-4vw + 8.5px);
+        right: -moz-calc(-4vw + 8.5px);
+        right: calc(-4vw + 8.5px);
+    }
+}
+
+@media (max-width: 600px) {
+    .flex-parent {
+        display:none;
+        -webkit-justify-content: initial;
+           -moz-box-pack: initial;
+                justify-content: initial;
+                height: 100%;
+    }
+    .input-flex-container {
+        -webkit-flex-wrap: wrap;
+                flex-wrap: wrap;
+        -webkit-justify-content: center;
+           -moz-box-pack: center;
+                justify-content: center;
+        width: 100%;
+        height: auto;
+        margin-top: 15vh;
+    }
+    .input {
+        width: 60px;
+        height: 60px;
+        margin: 0 10px 50px;
+        background-color: #AEB6BF;
+    }
+    .input::before, .input::after {
+        content: none;
+    }
+    .input span {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    .input span::before {
+        top: -webkit-calc(100% + 5px);
+        top: -moz-calc(100% + 5px);
+        top: calc(100% + 5px);
+        -webkit-transform: translateX(-50%);
+           -moz-transform: translateX(-50%);
+             -o-transform: translateX(-50%);
+                transform: translateX(-50%);
+        text-indent: 0;
+        text-align: center;
+    }
+    .input span::after {
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+           -moz-transform: translate(-50%, -50%);
+             -o-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+        color: #ECF0F1;
+    }
+    .description-flex-container {
+        margin-top: 30px;
+        text-align: center;
+    }
+}
+
+
+

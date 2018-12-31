@@ -1,0 +1,74 @@
+{% extends "core/base.html" %}
+{% block title %}Info{% endblock title %}
+{% block head %}
+<!-- Boostrap Modal -->
+    <!-- Link descompone el footer -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% endblock head %}
+{% block action_resul %}{% url 'ruser_info' %}{% endblock %}
+{% load static %}
+{% load class_name %}
+<!--Content-->
+
+{% block content %}
+<div class="table-container">
+{% if listaa %}
+        <div class="query-content">
+                <a style="color:#E0DFDD;">[ Hola {{user}} ]</a>
+            </div>
+<div class="table">
+<table id="user_info">
+    <tr>
+        <th><a class="btn-filter btn btn-{% if 'title' in request.GET %}filter-on
+            {% else %}filters{% endif %}" 
+href="">
+[ Título ]
+</a></th>
+        <th><a class="btn-filter btn btn-{% if 'author' in request.GET %}filter-on
+            {% else %}filters{% endif %}" 
+href="">
+[ Autor ]
+</a></th>
+        <th><a class="btn-filter btn btn-{% if 'usuario' in request.GET %}filter-on
+            {% else %}filters{% endif %}" 
+href="">
+[ Usuario ]
+</a></th>
+        <th><a class="btn-filter btn btn-{% if 'created' in request.GET %}filter-on
+            {% else %}filters{% endif %}" 
+href="">
+[ Creación ]
+</a></th>
+        <th><a class="btn-filter btn btn-{% if 'updated' in request.GET %}filter-on
+            {% else %}filters{% endif %}" 
+href="">
+[ Actualización ]
+</a></th>
+    </tr>
+{% for nodo in listaa %}
+    <tr>
+        <td>{{nodo.titulo}}</td>
+        <td>{{nodo.autor}}</td>
+        <td>{{nodo.usuario}}</td>
+        <td>{{nodo.created}}</td>
+        <td>{{nodo.updated}}</td>
+
+    </tr>
+{% endfor %}
+</table>
+<div class="query-content">
+        <a style="color:#E0DFDD;" href="{% url 'user_info' %}">[ Regresar ]</a>
+
+</div>
+</div>
+{% else %} 
+<div class="query-content col-lg-12 col-md-12 snresultados-nodos">
+        <h3>Lo sentimos {{user}}</h3>
+        <h5>[ No se han generado coincidencias ]</h5>
+        <a style="color:#E0DFDD;" href="{% url 'user_info' %}">[ Regresar ]</a>
+    </div>
+{% endif %}
+
+</div>
+{% endblock %}
+    

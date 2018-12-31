@@ -1,0 +1,93 @@
+{% extends "core/base.html" %}
+{% block title %}Nodos{% endblock title %}
+{% block action_resul %}{% url 'rNodos' %}{% endblock %}
+{% load static %}
+{% load class_name %}
+
+<!--Content-->
+{% block content %}
+<!-- onload - draw() en body de base.html -->
+<div class="container nodos-container">
+<!-- Json a books.js -->
+<input id="jsonh" type="hidden" name="" value="{{data3}}">
+
+    <!-- Nodos -->
+    <div id="mynetwork"></div>
+    <pre id="eventSpan"></pre>
+
+    <!-- Modal -->
+    <div id="id01" class="w3-modal">
+        <div class="w3-modal-content w3-animate-left">
+          <div class="w3-container" style="background-color: rgba(217,216,214,0.8)">
+            {% comment %} <span style="padding: 10px;" onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">[ Cerrar ]</span> {% endcomment %}
+            <div class="col-lg-9 col-md-9 ficha-libro-info ficha-mapa">
+              
+              <div class="ficha-relaciones">
+                <h5>Temas relacionados</h5>
+                <a id="relaciones" href="" class="link"></a>
+            </div>
+              
+              <div class="ficha-info-a">
+                <div class="ficha ficha-procedencia">
+                    
+                    <h6>Procedencia</h6>                        
+                    <p id="procedencia" class="Editorial"></p>
+                    
+                </div>
+                <div class="ficha ficha-titulo">
+                    <h6 id="">Título</h6>
+                    <p id="titulo" class="section-heading title"></p>
+                </div>
+            </div>
+
+              <div class="ficha-info-a">
+                <div class="ficha ficha-isbn">
+                    
+                    <h6>Isbn</h6>
+                    <p id="isbn" class="isbn"></p>
+                    
+                </div>
+                <div class="ficha ficha-autor">
+                    <h6>Autor</h6>
+                    <p id="autor" class="autor"></p>
+                </div>                
+            </div>
+              <div class="ficha-libro-img-mapa col-lg-3 col-md-3 offset-lg-1">
+                <img id="imgn" class="" src="" alt="">
+            </div>
+
+            <!-- Link Modal -->
+            <div class="col-lg-12 col-md-12 btn-modal1">
+                <p id="mlibro"></p>
+            </div>  
+            </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Error debúsqueda -->
+    <div id="bad"></div>
+
+</div>
+      
+  <!-- Modal relaciones -->
+  <div id="id02" class="w3-modal">
+    <div class="w3-modal-content">
+      <div class="w3-container">
+        <span onclick="document.getElementById('id02').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <h2 id="categoria"></h2>
+      </div>
+    </div>
+  </div>
+
+{% endblock content%}
+
+{% block scripts %}
+
+
+
+
+{% endblock scripts %}
+

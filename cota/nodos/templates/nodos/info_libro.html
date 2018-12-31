@@ -1,0 +1,72 @@
+{% extends "core/base.html" %}
+{% block title %}Constelaciones{% endblock title %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block action_resul_n %}{% url 'rLista' %}{% endblock %}
+{% block siteheading %}{% endblock %}
+
+{% block content %}
+{% for nodo in lista %}
+<div class="info-libro-container">
+    <div class="modal-container modal-info-libro-container row"> 
+        <div class="modal-info col-lg-10">
+            <h2 style="font-weight: bold; color: #fff; font-style:italic;">{{ nodo.titulo}}</h2>
+            <h4>{{nodo.autor}}</h4>
+            <div class="modal-descripcion">
+                <p>{{nodo.descripcion | safe}}</p>
+            </div>
+            <div class="modalB-relaciones">
+                {% for category in nodo.categorias.all %}
+                    <a href="{% url 'category' category.id %}" class="link">[ {{category.name}} ]</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="ficha-modal-img col-lg-3 col-md-3 offset-lg-1">
+            {% if nodo.link != none %}
+                <a style="font-size:15px; " href="{{nodo.link}}" target="blank">[ Leer ]</a>
+            {% endif %}
+            <img class="img-fluid" src="{{nodo.imagen.url}}" alt="">
+        </div>
+    </div>
+    <div class="btn-buscadores col-lg-12 ">
+
+      <button type="submit" class="btn-libro btn-filter btn btn-{% if 'title' in request.GET %}filter-on
+      {% else %}filters{% endif %}">
+        <a href="{% url 'Lista' %}">[ Categorias de Estudio ]</a>
+      </button>
+    <form method="GET" action="{% url 'rNodos' %}" >
+
+        {% csrf_token %}
+        {{ form.as_p }}  
+      <input 	type='hidden' name="qss" value='{{libro}}' >
+      <button type="submit" class="btn-filter btn btn-{% if 'title' in request.GET %}filter-on
+      {% else %}filters{% endif %}">
+        {% if '/constelaciones/' in request.path or 'resultados_constelaciones' in request.path %}
+          <a>[ Regresar a Constelaciones ]</a>
+          {% else %}
+          <a>[ Buscar en Constelaciones ]</a>
+        {% endif %}
+      </button>
+    </form>
+    <form method="GET" action="{% url 'rMapa' %}" >
+
+        {% csrf_token %}
+        {{ form.as_p }}  
+      <input 	type='hidden' name="q" value='{{libro}}' >
+      <button type="submit" class="btn-filter btn btn-{% if 'title' in request.GET %}filter-on
+      {% else %}filters{% endif %}">
+        {% if 'mapa' in request.path or 'resultados_mapa' in request.path %}
+          <a>[ Regresar a Mapa ]</a>
+          {% else %}    
+          <a>[ Buscar en Mapa ]</a>
+        {% endif %}
+      </button>
+    </form> 
+  
+  </div>
+</div>  
+
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% block title %}{{ title }} | {{ site_title|default:_('Cota admin') }}{% endblock %}
+
+{% block extrastyle %}
+<style>
+    #header {
+        background-color: #D8D9D6;
+    }
+    #branding h1, #branding h1 a:link, #branding h1 a:visited {
+        color: rgb(240, 237, 236);
+        font-weight: bold;
+    }
+    .module h2, .module caption, .inline-group h2 {
+        margin: 0;
+        padding: 8px;
+        font-weight: 400;
+        font-size: 13px;
+        text-align: left;
+        background-color: rgb(88, 118, 134);
+        color: #fff;
+    }
+    div.breadcrumbs{
+        background-color:#3C5D6F;
+    }
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <img src="http://cotaprueba.pythonanywhere.com/static/core/img/Logos/cota_azul.png" style="height:40px;" />
+    </a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

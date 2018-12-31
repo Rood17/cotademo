@@ -1,0 +1,100 @@
+{% extends "core/base.html" %}
+{% block title %}Info{% endblock title %}
+{% block head %}
+<!-- Boostrap Modal -->
+    <!-- Link descompone el footer -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% endblock head %}
+{% block action_resul %}{% url 'ruser_info' %}{% endblock %}
+{% load static %}
+{% load class_name %}
+<!--Content-->
+
+{% block content %}
+<div class="table-container">
+        <div class="query-content">
+                <a style="cursor:defualt; color:#E0DFDD;">[ Hola {{user}} ]</a>
+            </div>
+    <!-- <div class="list-filters">
+            <a class="btn-filter btn btn-{% if 'title' in request.GET %}filter-on
+                                         {% else %}filters{% endif %}" 
+               href="?title=True">
+               [ Título ]
+            </a>
+            <a class="btn-filter btn btn-{% if 'author' in request.GET %}filter-on
+                                         {% else %}filters{% endif %}" 
+               href="?author=True">
+                [ Autor ]
+            </a>
+            <a class="btn-filter btn btn-{% if 'year' in request.GET %}filter-on
+                                         {% else %}filters{% endif %}" 
+               href="?year=True">
+                [ Periódo ]
+            </a> 
+          
+    </div> -->
+<div class="table">
+<table id="user_info">
+    <tr>
+        <th><a class="btn-filter btn btn-{% if 'title' in request.GET %}filter-on
+            {% else %}filters{% endif %}" 
+href="?title=True">
+[ Título ]
+</a></th>
+        <th><a class="btn-filter btn btn-{% if 'author' in request.GET %}filter-on
+            {% else %}filters{% endif %}" 
+href="?author=True">
+[ Autor ]
+</a></th>
+        <th><a class="btn-filter btn btn-{% if 'usuario' in request.GET %}filter-on
+            {% else %}filters{% endif %}" 
+href="?usuario=True">
+[ Usuario ]
+</a></th>
+        <th><a class="btn-filter btn btn-{% if 'created' in request.GET %}filter-on
+            {% else %}filters{% endif %}" 
+href="?created=True">
+[ Creación ]
+</a></th>
+        <th><a class="btn-filter btn btn-{% if 'updated' in request.GET %}filter-on
+            {% else %}filters{% endif %}" 
+href="?updated=True">
+[ Actualización ]
+</a></th>
+    </tr>
+{% for nodo in lista %}
+    <tr>
+        <td>{{nodo.titulo}}</td>
+        <td>{{nodo.autor}}</td>
+        <td>{{nodo.usuario}}</td>
+        <td>{{nodo.created}}</td>
+        <td>{{nodo.updated}}</td>
+
+    </tr>
+{% endfor %}
+</table>
+</div>  
+    
+    <!-- Paginator -->
+    {% if lista.paginator.num_pages != 1 %}
+    <div style="margin:60px auto 0px;" class="pagination container">
+        <span class="step-links">
+            {% if lista.has_previous %}
+                <a href="?page=1&{{params}}">&laquo; [ first ]</a>
+                <a href="?page={{ lista.previous_page_number }}&{{params}}">[ previous ]</a>
+            {% endif %}
+      
+            <span class="current">
+                Page {{ lista.number }} of {{ lista.paginator.num_pages }}.
+            </span>
+      
+            {% if lista.has_next %}
+                <a href="?page={{ lista.next_page_number }}&{{params}}">[ next ]</a>
+                <a href="?page={{ lista.paginator.num_pages }}&{{params}}">[ last ] &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+      {% endif %}
+</div>
+{% endblock %}
+    

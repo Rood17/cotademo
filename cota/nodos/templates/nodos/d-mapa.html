@@ -1,0 +1,156 @@
+{% extends "core/base.html" %}
+{% block title %}Mapa{% endblock title %}
+{% block action_resul %}{% url 'rMapa' %}{% endblock %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block content %}
+
+<!-- Json a ciudades.js -->
+<input id="json_map" type="hidden" name="" value="{{data_map3}}">
+
+
+<div class="mapa-container row">
+{% if mapaInfo|length < 4 %}
+<div class="query-content col-lg-12">
+    {% for i in mapaInfo %}
+    <form method="GET" action="{% url 'rLista' %}" >
+            {% csrf_token %}
+            {{ form.as_p }}  
+              <input 	type='hidden' name="q" value='{{i.titulo}}'>
+              <button type="submit" class="btn-filter btn btn-{% if 'title' in request.GET %}filter-on
+              {% else %}filters{% endif %}">
+              <a>[ {{i.titulo}} ]</a>
+              </button>
+        </form>
+    {% endfor %}
+</div>
+{% endif %}
+<!-- Línea del tiempo -->
+    <div class="flex-parent">
+                <div class="input-flex-container">
+                    <a href="?1900"><div id="" class="input {% if '1900' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 1900 ]"></span>
+                    </div></a>
+                    <a href="?1910"><div id="" class="input {% if '1910' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 1910 ]"></span>
+                    </div></a>                    
+                    <a href="?1920"><div id="" class="input {% if '1920' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 1920 ]"></span>
+                    </div></a>
+                    <a href="?1930"><div id="" class="input {% if '1930' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 1930 ]"></span>
+                    </div></a>
+                    <a href="?1940"><div id="" class="input {% if '1940' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 1940 ]"></span>
+                    </div></a>
+                    <a href="?1950"><div id="" class="input {% if '1950' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 1950 ]"></span>
+                    </div></a>
+                    <a href="?1960"><div id="" class="input {% if '1960' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 1960 ]"></span>
+                    </div></a>
+                    <a href="?1970"><div id="" class="input {% if '1970' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 1970 ]"></span>
+                    </div></a>
+                    <a href="?1980"><div id="" class="input {% if '1980' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 1980 ]"></span>
+                    </div></a>
+                    <a href="?1990"><div id="" class="input {% if '1990' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 1990 ]"></span>
+                    </div></a>
+                    <a href="?2000"><div id="" class="input {% if '2000' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 2000 ]"></span>
+                    </div></a>
+                    <a href="?2010"><div id="" class="input {% if '2010' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 2010 ]"></span>
+                    </div></a>
+                    <a href="?2020"><div id="" class="input {% if '2020' in request.GET %}active{% else %}{% endif %}" onclick="">
+                        <span data-year="" data-info="[ 2020 ]"></span>
+                    </div></a>
+                </div>
+    </div>
+<!-- Mapa -->
+    <div class="cont">
+        <div class="mapcontainer">
+            <div class="map">
+            </div>
+        </div>
+    </div >
+
+    <div class="mapStatic "></div>
+
+<!--Modal  -->
+    <div id="id01" class="w3-modal">
+    <div class="w3-modal-content w3-animate-left">
+    <div class="w3-container" style="background-color: rgba(217,216,214,0.8)">
+        {% comment %} <span onclick="document.getElementById('id01').style.display='none'" class="w3-buttow3-display-topright">&times;</span> {% endcomment %}
+                  
+<!-- lista libro -->
+        <div class="col-lg-9 col-md-9 ficha-libro-info ficha-mapa">
+            <div class="ficha-relaciones">
+                <h5>Temas relacionados</h5>
+                <a id="relaciones" href="" class="link">[  ]</a>
+            </div>
+            <div class="ficha-info-a">
+                <div class="ficha ficha-procedencia">
+                    <h6>Editorial</h6>                        
+                    <p id="editorial" class="Editorial"></p>                           
+                </div>
+                <div class="ficha ficha-titulo">
+                    <h6 id="">Título</h6>
+                    <p id="titulo" class="section-heading title"></p>
+                </div>
+            </div>
+            <div class="ficha-info-a">
+                <div class="ficha ficha-isbn">                            
+                    <h6>Isbn</h6>
+                    <p id="isbn" class="isbn"></p>
+                </div>
+                <div class="ficha ficha-autor">
+                    <h6>Autor</h6>
+                    <p id="autor" class="autor">zzxzx</p>
+                </div>                
+            </div>
+
+            <div class="ficha-libro-img-mapa col-lg-3 col-md-3 offset-lg-1">
+                <img id="img" class="" src="{{nodo.imagen.url}}" alt="">
+            </div>
+
+            <!-- Link Modal -->
+            <div class="col-lg-12 col-md-12 btn-modal1">
+                    <p id="mlibro"></p>
+                </div> 
+        </div>
+
+ <!--Descripción  -->
+                
+            
+    </div>    
+    </div>
+    </div>
+
+</div>
+
+
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+    
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active-collapsible");
+        var content = this.nextElementSibling;
+        if (content.style.maxHeight){
+          content.style.maxHeight = null;
+        } else {
+          content.style.maxHeight = content.scrollHeight + "px";
+        } 
+      });
+    }
+    </script>
+{% endblock scripts %}

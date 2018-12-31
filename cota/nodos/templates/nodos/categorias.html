@@ -1,0 +1,138 @@
+{% extends "core/base.html" %}
+{% block title %}Categorias{% endblock title %}
+{% load static %}
+{% block head %}
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% endblock head %}
+{% block action_resul_n %}{% url 'rLista' %}{% endblock %}
+
+{% block content %}
+<div class="category-container">
+    <div class="query-content">
+        <a style="cursor:default; color:#E0DFDD;">[ {{category}} ]</a>
+    </div>
+{% for nodo in category.get_nodos.all %}
+<div class="container cat-f-container">
+        
+    <div style="margin-top:80px;" class="row ficha-libro">  	
+        <div class="col-lg-9 col-md-9 ficha-libro-info">
+            <div class="ficha-relaciones">
+                <h5>Temas relacionados</h5>
+                {% for category in nodo.cate_estudio.all %}
+                <a href="{% url 'categoria_estudio' category.id %}" class="link">[ {{category.categoria_estudio}} ]</a>
+                {% endfor %}
+            </div>
+            <div class="ficha-info-a">
+                <div class="ficha ficha-procedencia">
+                    {% if nodo.procedencia != none %}
+                    <h6>Procedencia</h6>                        
+                    <p class="Editorial">{{nodo.procedencia | safe}}</p>
+                    {% endif %}
+                </div>
+                <div class="ficha ficha-titulo">
+                    <h6>Título</h6>
+                    <p class="section-heading title">{{nodo.titulo}}</p>
+                </div>
+            </div>
+            <div class="ficha-info-a">
+                <div class="ficha ficha-isbn">
+                    {% if nodo.isbn != none %}
+                    <h6>Isbn</h6>
+                    <p class="isbn">{{nodo.isbn}}</p>
+                    {% endif %}
+                </div>
+                <div class="ficha ficha-autor">
+                    <h6>Autor</h6>
+                    <p class="autor">{{nodo.autor}}</p>
+                </div>                
+            </div>
+            <a class="modal-a" data-toggle="modal" data-target="#{{nodo.pk}}">[ Ver más ]</a>
+            
+            <div class="modal-info">
+                <!-- <a onclick="document.getElementById('{{nodo.pk}}').style.display='block'" >[ Ver más ]</a> -->
+                <div id="{{nodo.pk}}" class="modal fade w3-animate-left" role="dialog">
+                        <div class="modal-container row"> 
+                          <div class="modal-info col-lg-10">
+                            <h2 style="font-weight: bold; color: #fff; font-style:italic;">{{ nodo.titulo}}</h2>
+                            <h4>{{nodo.autor}}</h4>
+                            <div style="" class="modal-descripcion cat-modal-descripcion">
+                                <p>{{nodo.descripcion | safe}}</p>
+                            </div>
+                            <div style="" class="modalB-relaciones cat-modal-relaciones">
+                                {% for category in nodo.categorias.all %}
+                                <a href="{% url 'category' category.id %}" class="link">[ {{category.name}} ]</a>
+                                {% endfor %}
+                            </div>
+                          </div>
+                          <div class="ficha-modal-img col-lg-3 col-md-3 offset-lg-1">
+                            {% if nodo.link != none %}
+                                <a href="{{nodo.link}}" target="blank">[ Leer ]</a>
+                            {% endif %}
+                            <img class="img-fluid" src="{{nodo.imagen.url}}" alt="">
+                        </div>
+                        </div>
+                      </div>
+            </div>
+                <!-- BTN´s Buscadores -->
+    <div class="btn-buscadores-cat ">
+            <button type="submit" class="btn-filter btn btn-{% if 'title' in request.GET %}filter-on
+            {% else %}filters{% endif %}">
+            <a href="{% url 'Lista' %}">[ Categorias de Estudio ]</a>
+        </button>
+            <form method="GET" action="{% url 'rNodos' %}" >
+        
+                {% csrf_token %}
+                {{ form.as_p }}  
+              <input 	type='hidden' name="qss" value='{{nodo.titulo}}' >
+              <button type="submit" class="btn-filter btn btn-{% if 'title' in request.GET %}filter-on
+              {% else %}filters{% endif %}">
+                  <a>[ Buscar en Constelaciones ]</a>
+              </button>
+            </form>
+            <form method="GET" action="{% url 'rMapa' %}" >
+        
+                {% csrf_token %}
+                {{ form.as_p }}  
+              <input 	type='hidden' name="q" value='{{nodo.titulo}}' >
+              <button type="submit" class="btn-filter btn btn-{% if 'title' in request.GET %}filter-on
+              {% else %}filters{% endif %}">
+                  <a>[ Buscar en Mapa ]</a>
+              </button>
+            </form> 
+          
+    </div>
+        </div>
+        <div class="ficha-libro-img-cat col-lg-3 col-md-3 offset-lg-1">
+                <img class="img-fluid" src="{{nodo.imagen.url}}" alt="">
+        </div>
+    </div>
+    
+</div>
+{% endfor %}
+
+<div class="clearfix"></div>
+
+
+<!-- Paginator -->
+{% if lista.paginator.num_pages != 1 %}
+<div style="margin:60px auto 0px;" class="pagination container">
+    <span class="step-links">
+        {% if lista.has_previous %}
+            <a href="?page=1&{{params}}">&laquo; [ first ]</a>
+            <a href="?page={{ lista.previous_page_number }}&{{params}}">[ previous ]</a>
+        {% endif %}
+  
+        <span class="current">
+            Page {{ lista.number }} of {{ lista.paginator.num_pages }}.
+        </span>
+  
+        {% if lista.has_next %}
+            <a href="?page={{ lista.next_page_number }}&{{params}}">[ next ]</a>
+            <a href="?page={{ lista.paginator.num_pages }}&{{params}}">[ last ] &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+  {% endif %}
+</div>
+
+{% endblock %}
